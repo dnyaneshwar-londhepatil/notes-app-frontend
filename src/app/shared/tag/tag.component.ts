@@ -1,14 +1,5 @@
 import { Component, input, computed } from '@angular/core';
 
-// type status =
-//   | 'all'
-//   | 'work'
-//   | 'personal'
-//   | 'ideas'
-//   | 'others'
-//   | 'important'
-//   | 'urgent';
-
 @Component({
   selector: 'app-tag',
   imports: [],

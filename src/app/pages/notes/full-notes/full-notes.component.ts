@@ -6,14 +6,16 @@ import {
   signal,
   Signal,
 } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NotesService } from '../../../services/notes/notes.service';
 import { NotesListComponent } from './components/notes-list/notes-list.component';
 import { NoteDetailsComponent } from './components/note-details/note-details.component';
 import { Note } from '../../../interfaces/notes';
+import { ButtonComponent } from '../../../shared/button/button.component';
 
 @Component({
   selector: 'app-full-notes',
-  imports: [NotesListComponent, NoteDetailsComponent],
+  imports: [NotesListComponent, NoteDetailsComponent, ButtonComponent],
   templateUrl: './full-notes.component.html',
   styleUrl: './full-notes.component.scss',
 })
@@ -26,6 +28,12 @@ export class FullNotesComponent {
 
   public selectedNote = signal<Note | null>(null);
 
+  public selectedNoteId = signal('');
+
+  public activatedRoute = inject(ActivatedRoute);
+
+  public router = inject(Router);
+
   public notesList: Signal<Note[]> = computed(() => {
     if (this.notesCount() === 0) {
       return [];
@@ -36,9 +44,22 @@ export class FullNotesComponent {
 
   constructor() {
     this.notesService.getNotes();
+    this.activatedRoute.params.subscribe((params) => {
+      this.selectedNoteId.set(params['id']);
+    });
 
     effect(() => {
-      console.log('All notes:', this.getAllNotes());
+      this.selectedNote.set(
+        this.getAllNotes().find(
+          (note) => note?._id === this.selectedNoteId(),
+        ) ?? null,
+      );
+
+      const selectedNote = this.getAllNotes().find(
+        (note) => note?._id === this.selectedNoteId(),
+      );
+
+      this.selectedNote.set(selectedNote ?? null);
     });
   }
 
@@ -47,5 +68,10 @@ export class FullNotesComponent {
     const selectedNote = allNotes.find((note) => note?._id === noteId);
 
     this.selectedNote.set(selectedNote ?? null);
+  }
+
+  public handleBackNavigation() {
+    this.selectedNote.set(null);
+    this.router.navigate(['/notes-list']);
   }
 }

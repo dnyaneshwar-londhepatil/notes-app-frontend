@@ -1,0 +1,33 @@
+.note-details-container {
+  position: relative;
+
+  .notes-title {
+    font-size: 1.5rem;
+    color: var(--color-text-primary);
+  }
+
+  .date-container {
+    position: absolute;
+    top: 0.5rem;
+    right: 1rem;
+
+    p {
+      font-size: 0.75rem;
+      margin-bottom: 0;
+      color: var(--color-text-secondary);
+    }
+  }
+
+  .header-section {
+    border-bottom: 1px solid #c0392b;
+  }
+
+  .content-container {
+    padding-block: 1rem;
+
+    .notes-content {
+      font-size: 1rem;
+      color: var(--color-text-primary);
+    }
+  }
+}

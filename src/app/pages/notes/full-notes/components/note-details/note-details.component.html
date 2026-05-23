@@ -1,2 +1,16 @@
-<p>{{ selectedNote()?.title }}</p>
-<p>{{ selectedNote()?.content }}</p>
+<section class="note-details-container">
+  <div class="date-container">
+    <p class="primary-font-medium">{{ selectedNote()?.createdAt | date }}</p>
+  </div>
+  <div class="header-section">
+    <app-tag [status]="selectedNote()?.category || 'all'">
+      {{ selectedNote()?.category | uppercase }}
+    </app-tag>
+    <p class="primary-font-bold notes-title">{{ selectedNote()?.title }}</p>
+  </div>
+  <div class="content-container">
+    <p class="primary-font-regular notes-content">
+      {{ selectedNote()?.content }}
+    </p>
+  </div>
+</section>

@@ -6,7 +6,10 @@
   <div class="notes-list-content">
     <ul>
       @for (item of notesList(); track $index) {
-        <li class="list-item" [class.active]="item._id === selectedNoteId()">
+        <li
+          class="list-item"
+          [class.active]="item._id === selectedNoteIdFromList()"
+        >
           <app-button
             [fullWidth]="true"
             [variant]="'default'"

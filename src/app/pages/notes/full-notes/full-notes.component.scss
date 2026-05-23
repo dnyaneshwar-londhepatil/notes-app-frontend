@@ -2,6 +2,12 @@
   padding-block: 4rem;
   height: 100dvh;
 
+  .back-logout-btn-container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+
   .full-notes-content {
     display: flex;
     height: 100%;

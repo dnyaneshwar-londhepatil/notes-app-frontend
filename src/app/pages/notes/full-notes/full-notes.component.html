@@ -1,9 +1,16 @@
 <section class="full-notes-container">
+  <div class="back-logout-btn-container">
+    <app-button [variant]="'secondary'" (clicked)="handleBackNavigation()"
+      >Back</app-button
+    >
+    <app-button [variant]="'primary'">Logout</app-button>
+  </div>
   <div class="full-notes-content">
     <div class="left-container">
       <app-notes-list
         [notesList]="notesList()"
         (selectedNote)="onNoteSelected($event)"
+        [selectedNoteId]="selectedNoteId()"
       ></app-notes-list>
     </div>
     <div class="right-container">

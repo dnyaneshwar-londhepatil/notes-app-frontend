@@ -1,5 +1,12 @@
 import { DatePipe } from '@angular/common';
-import { Component, input, inject, signal, output } from '@angular/core';
+import {
+  Component,
+  input,
+  inject,
+  signal,
+  output,
+  effect,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Note } from '../../../../../interfaces/notes';
 import { ButtonComponent } from '../../../../../shared/button/button.component';
@@ -16,18 +23,20 @@ export class NotesListComponent {
 
   public activatedRoute = inject(ActivatedRoute);
 
-  public selectedNoteId = signal('');
+  public selectedNoteIdFromList = signal('');
+
+  public selectedNoteId = input('');
 
   public selectedNote = output<string>();
 
   constructor() {
-    this.activatedRoute.params.subscribe((params) => {
-      this.selectedNoteId.set(params['id']);
+    effect(() => {
+      this.selectedNoteIdFromList.set(this.selectedNoteId());
     });
   }
 
   public handleNoteSelection(noteId: string) {
-    this.selectedNoteId.set(noteId);
+    this.selectedNoteIdFromList.set(noteId);
     this.selectedNote.emit(noteId);
   }
 }
