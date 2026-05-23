@@ -1,0 +1,23 @@
+<div class="notes-list-container">
+  <div class="header-section">
+    <p class="primary-font-heavy heading">My Notes</p>
+    <p class="primary-font-regular text">6 entries</p>
+  </div>
+  <div class="notes-list-content">
+    <ul>
+      @for (item of notesList(); track $index) {
+        <li class="list-item" [class.active]="item._id === selectedNoteId()">
+          <app-button [fullWidth]="true" [variant]="'default'">
+            <p class="primary-font-bold notes-title">{{ item.title }}</p>
+            <div class="date-container">
+              <span class="circle"></span>
+              <p class="primary-font-regular date">
+                {{ item.createdAt | date }}
+              </p>
+            </div>
+          </app-button>
+        </li>
+      }
+    </ul>
+  </div>
+</div>

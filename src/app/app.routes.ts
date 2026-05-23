@@ -21,4 +21,12 @@ export const routes: Routes = [
         (m) => m.NotesComponent,
       ),
   },
+  {
+    path: 'notes/:id',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('../app/pages/notes/full-notes/full-notes.component').then(
+        (m) => m.FullNotesComponent,
+      ),
+  },
 ];

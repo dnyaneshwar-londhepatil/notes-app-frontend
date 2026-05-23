@@ -1,0 +1,20 @@
+.full-notes-container {
+  padding-block: 4rem;
+  height: 100dvh;
+
+  .full-notes-content {
+    display: flex;
+    height: 100%;
+    border: 1px solid var(--color-stroke-default);
+    border-radius: 18px;
+    .left-container {
+      width: 30%;
+      border-right: 1px solid var(--color-stroke-default);
+    }
+
+    .right-container {
+      width: 70%;
+      padding: 1rem;
+    }
+  }
+}

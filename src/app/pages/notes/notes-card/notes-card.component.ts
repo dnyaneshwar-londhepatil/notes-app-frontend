@@ -6,6 +6,7 @@ import { ModalService } from '../../../services/modal/modal.service';
 import { DeleteNoteComponent } from '../delete-note/delete-note.component';
 import { UpperCasePipe } from '@angular/common';
 import { AiService } from '../../../services/ai/ai.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-notes-card',
@@ -19,6 +20,8 @@ export class NotesCardComponent {
   public modalService = inject(ModalService);
 
   public aiService = inject(AiService);
+
+  public router = inject(Router);
 
   public dateFormat(): string {
     const createdAt = new Date(this.note()?.createdAt as Date);
@@ -50,7 +53,6 @@ export class NotesCardComponent {
   }
 
   public handleDelete() {
-    console.log(this.note());
     this.modalService.open(DeleteNoteComponent, {
       size: 'md',
       data: {
@@ -64,5 +66,9 @@ export class NotesCardComponent {
     return this.aiService.summarizeNotes(content).subscribe((summary) => {
       console.log('Note summarized:', summary);
     });
+  }
+
+  public openNotePage() {
+    this.router.navigate(['/notes', this.note()?._id]);
   }
 }
