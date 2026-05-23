@@ -1,4 +1,11 @@
-import { Component, computed, effect, inject, Signal } from '@angular/core';
+import {
+  Component,
+  computed,
+  effect,
+  inject,
+  signal,
+  Signal,
+} from '@angular/core';
 import { NotesService } from '../../../services/notes/notes.service';
 import { NotesListComponent } from './components/notes-list/notes-list.component';
 import { NoteDetailsComponent } from './components/note-details/note-details.component';
@@ -17,6 +24,8 @@ export class FullNotesComponent {
 
   public notesCount = computed(() => this.getAllNotes().length);
 
+  public selectedNote = signal<Note | null>(null);
+
   public notesList: Signal<Note[]> = computed(() => {
     if (this.notesCount() === 0) {
       return [];
@@ -31,5 +40,12 @@ export class FullNotesComponent {
     effect(() => {
       console.log('All notes:', this.getAllNotes());
     });
+  }
+
+  public onNoteSelected(noteId: string) {
+    const allNotes = this.getAllNotes();
+    const selectedNote = allNotes.find((note) => note?._id === noteId);
+
+    this.selectedNote.set(selectedNote ?? null);
   }
 }

@@ -1,10 +1,13 @@
 <section class="full-notes-container">
   <div class="full-notes-content">
     <div class="left-container">
-      <app-notes-list [notesList]="notesList()"></app-notes-list>
+      <app-notes-list
+        [notesList]="notesList()"
+        (selectedNote)="onNoteSelected($event)"
+      ></app-notes-list>
     </div>
     <div class="right-container">
-      <app-note-details></app-note-details>
+      <app-note-details [selectedNote]="selectedNote()"></app-note-details>
     </div>
   </div>
 </section>
