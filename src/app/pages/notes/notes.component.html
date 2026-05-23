@@ -1,0 +1,9 @@
+<div class="notes-page">
+  <app-search-notes (emittedCategory)="filterNotes($event)"></app-search-notes>
+
+  <div class="notes-container">
+    @for (note of getAllNotes(); track $index) {
+      <app-notes-card [note]="note"></app-notes-card>
+    }
+  </div>
+</div>

@@ -1,0 +1,9 @@
+<button class="btn button" [class]="classes" (click)="handleClick()">
+  @if (isLoading()) {
+    <output
+      class="spinner-border spinner-border-sm"
+      aria-hidden="true"
+    ></output>
+  }
+  <ng-content></ng-content>
+</button>

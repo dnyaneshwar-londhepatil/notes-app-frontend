@@ -1,1 +1,248 @@
 /* You can add global styles to this file, and also import other style files */
+@import url("https://fonts.googleapis.com/css2?family=Onest:wght@100..900&display=swap");
+/* Importing Bootstrap SCSS file. */
+@import "bootstrap/scss/bootstrap";
+
+:root {
+  /* Font Family */
+  --font-family: "Onest", sans-serif;
+
+  /* Primary Colors */
+  --color-primary: #3d38d0;
+  --color-primary-bg: #ffffff;
+  --color-primary-btn-bg: #000000 !important;
+  --color-primary-btn-text: #ffffff;
+  --color-primary-extra-light: #f0f0f0;
+  --color-primary-light: #cdcaf6;
+  --color-primary-medium: #9e9bff;
+  --color-primary-text: #000000;
+
+  /* Secondary Colors */
+  --color-secondary-bg: #f9f9f9;
+  --color-secondary-btn-bg: #ffffff;
+  --color-secondary-btn-stroke: #000000 !important;
+  --color-secondary-btn-text: #000000 !important;
+  --color-secondary-text: #545454;
+
+  /* Tertiary Colors */
+  --color-tertiary-btn-bg: #f5f5f5;
+  --color-tertiary-btn-text: #000000;
+  --color-tertiary-text: #595959;
+  --color-tertiary-bg: #ececec;
+
+  --color-active-btn-bg: #1e1e1e;
+  --color-light-text: #ffffff;
+  --color-dark: #000000;
+  --color-anchor-text: #2e96ef;
+
+  /* Utility Colors */
+  --color-stroke-default: #e6e6e6;
+  --color-success-default: #00bb77;
+  --color-warning-default: #b25e09;
+  --color-error-default: #da2f2f;
+}
+
+body {
+  font-family: var(--font-family);
+  padding: 0;
+  margin: 0;
+}
+
+/* Font Family */
+.primary-font-light {
+  font-family: var(--font-family);
+  font-weight: 300;
+}
+
+.primary-font-regular {
+  font-family: var(--font-family);
+  font-weight: 400;
+}
+
+.primary-font-medium {
+  font-family: var(--font-family);
+  font-weight: 500;
+}
+
+.primary-font-semibold {
+  font-family: var(--font-family);
+  font-weight: 600;
+}
+
+.primary-font-bold {
+  font-family: var(--font-family);
+  font-weight: 700;
+}
+
+.primary-font-heavy {
+  font-family: var(--font-family);
+  font-weight: 800;
+}
+
+/* Flex Center Center*/
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Modal */
+
+.modal-extra-small {
+  max-width: 520px;
+
+  @media screen and (max-width: 767px) {
+    max-width: 357px;
+    margin-inline: auto;
+  }
+}
+
+.modal-small {
+  max-width: 634px;
+
+  @media screen and (max-width: 767px) {
+    max-width: 357px;
+    margin-inline: auto;
+  }
+}
+
+.modal-medium {
+  max-width: 720px;
+
+  @media screen and (max-width: 767px) {
+    max-width: 357px;
+    margin-inline: auto;
+  }
+}
+
+.modal-large {
+  max-width: 1136px;
+
+  @media screen and (max-width: 1199px) {
+    max-width: 862px;
+  }
+
+  @media screen and (max-width: 991px) {
+    max-width: 750px;
+  }
+}
+
+.modal-extra-large {
+  max-width: 100vw;
+  width: 100vw;
+  margin-inline-start: calc(-50vw + 50%);
+}
+
+/* Form */
+.form-label {
+  color: var(--color-primary-text);
+  line-height: 1.65;
+}
+
+.form-input {
+  height: 49px;
+  border: 1px solid var(--color-stroke-default);
+  border-radius: 50px;
+  padding-block: 8px;
+  padding-inline-start: 18px;
+  padding-inline-end: 8px;
+  width: 100%;
+  color: var(--color-primary-text);
+
+  @media screen and (max-width: 1199px) {
+    height: 48px;
+  }
+
+  @media screen and (max-width: 767px) {
+    height: 40px;
+  }
+
+  &:focus-visible {
+    border-color: var(--color-stroke-default);
+    outline: none;
+  }
+
+  &::placeholder {
+    color: var(--color-tertiary-text);
+  }
+}
+
+.textarea-input {
+  height: 100px;
+  border-radius: 16px;
+  max-height: 200px;
+}
+
+.password-input-container {
+  position: relative;
+
+  .show-password-button {
+    position: absolute;
+    inset-inline-end: 19px;
+    top: 50%;
+    transform: translateY(-50%);
+
+    svg {
+      width: 22px;
+      height: 20px;
+    }
+  }
+
+  .form-input {
+    padding-block: 8px;
+    padding-inline-start: 18px;
+    padding-inline-end: 50px;
+  }
+}
+
+// error message
+.error-message {
+  color: var(--color-error-default);
+}
+
+// success message
+.success-message {
+  color: var(--color-success-default);
+}
+
+.password-requirements {
+  padding-inline-start: 1.5rem;
+  margin-bottom: 0;
+  li {
+    &::marker {
+      color: var(--color-error-default);
+    }
+  }
+}
+
+// Toaster
+.toaster-special-content {
+  color: var(--color-primary);
+  font-weight: 700;
+}
+
+// Tooltip
+.tooltip {
+  .tooltip-inner {
+    padding-block: 17px;
+    padding-inline-start: 23px;
+    padding-inline-end: 22px;
+    max-width: 100%;
+    height: auto;
+    border-radius: 15px;
+
+    .custom-tooltip-text {
+      font-size: 14px;
+      line-height: 1.6;
+    }
+  }
+}
+
+.toast-position {
+  top: 6rem;
+  inset-inline-end: 0;
+
+  @media screen and (max-width: 767px) {
+    top: 3rem;
+  }
+}

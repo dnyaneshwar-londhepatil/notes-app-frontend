@@ -1,0 +1,14 @@
+.auth-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+
+  .auth-container-child {
+    width: 50%;
+    margin: auto;
+    background-color: var(--color-primary-bg);
+    padding: 2rem;
+    border-radius: 18px;
+  }
+}

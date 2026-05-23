@@ -1,0 +1,9 @@
+.notes-page {
+  padding-block: 3.25rem;
+
+  .notes-container {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  }
+}

@@ -1,0 +1,52 @@
+<form
+  class="new-note-form"
+  [formGroup]="newNoteForm"
+  (ngSubmit)="handleNewNote()"
+>
+  <h2 class="modal-title" id="modal-heading">New note</h2>
+
+  <div class="field">
+    <label for="note-title">Title</label>
+    <input
+      class="primary-font-medium"
+      id="note-title"
+      type="text"
+      placeholder="Note title…"
+      name="title"
+      formControlName="title"
+    />
+  </div>
+
+  <div class="field">
+    <label for="note-body">Body</label>
+    <textarea
+      class="primary-font-medium"
+      id="note-body"
+      placeholder="Write something…"
+      name="body"
+      formControlName="note"
+    ></textarea>
+  </div>
+
+  <div class="field">
+    <label for="note-tag">Tag</label>
+    <select
+      id="note-tag"
+      name="category"
+      formControlName="category"
+      class="primary-font-medium"
+    >
+      <option value="work">Work</option>
+      <option value="personal">Personal</option>
+      <option value="ideas">Ideas</option>
+      <option value="urgent">Urgent</option>
+    </select>
+  </div>
+
+  <div class="actions">
+    <app-button [variant]="'secondary'" (clicked)="handleCancel()"
+      >Cancel</app-button
+    >
+    <app-button [variant]="'primary'" type="submit">Save note</app-button>
+  </div>
+</form>

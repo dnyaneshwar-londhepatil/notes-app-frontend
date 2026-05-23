@@ -1,0 +1,28 @@
+.tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 99px;
+  margin-bottom: 8px;
+
+  p {
+    font-size: 12px;
+    margin: 0;
+  }
+
+  &--work {
+    background: #e6f1fb;
+    color: #185fa5;
+  }
+  &--personal {
+    background: #eeedfe;
+    color: #3c3489;
+  }
+  &--ideas {
+    background: #eaf3de;
+    color: #3b6d11;
+  }
+  &--urgent {
+    background: #fcebeb;
+    color: #a32d2d;
+  }
+}

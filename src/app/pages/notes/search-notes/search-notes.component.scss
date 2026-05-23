@@ -1,0 +1,41 @@
+.search-notes-section {
+  .toolbar {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 1.25rem;
+
+    .search-wrap {
+      flex: 1;
+      position: relative;
+
+      svg {
+        position: absolute;
+        left: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 16px;
+        color: var(--color-text-tertiary);
+        pointer-events: none;
+        width: 16px;
+        height: 16px;
+      }
+
+      input {
+        width: 100%;
+        padding-left: 34px;
+        padding-block: 10px;
+        border: 1px solid var(--color-default-stroke);
+        border-radius: 4px;
+        font-size: 16px;
+      }
+    }
+  }
+
+  .filter-bar {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 1.5rem;
+  }
+}

@@ -1,0 +1,85 @@
+<div class="auth-container sign-up-container">
+  <div>
+    <h1 class="primary-font-semibold heading">Sign Up</h1>
+  </div>
+
+  <form
+    class="form-container"
+    (ngSubmit)="handleRegistration()"
+    [formGroup]="signUpForm"
+    autocomplete="off"
+  >
+    <div class="form-group">
+      <label class="primary-font-medium form-label" for="userName">Name</label>
+      <input
+        type="text"
+        id="userName"
+        formControlName="userName"
+        class="form-input form-control primary-font-medium"
+        appErrorStateHighlight
+        errStateClass="error-input"
+        placeholder="Enter your name"
+      />
+    </div>
+
+    <div class="form-group">
+      <label class="primary-font-medium form-label" for="email">Email</label>
+      <input
+        type="email"
+        id="email"
+        formControlName="email"
+        class="form-input form-control primary-font-medium"
+        appErrorStateHighlight
+        errStateClass="error-input"
+        placeholder="Enter your email"
+      />
+    </div>
+
+    <div class="form-group">
+      <label class="primary-font-medium form-label" for="password"
+        >Password</label
+      >
+      <div class="password-input-container">
+        <input
+          id="password"
+          formControlName="password"
+          class="form-input form-control primary-font-medium"
+          appErrorStateHighlight
+          errorStateClass="error-input"
+          placeholder="Enter your password"
+        />
+      </div>
+    </div>
+
+    <!-- <button
+      type="submit"
+      class="auth-button primary-button custom-button rounded-pill primary-font-medium"
+    >
+      <output
+        class="spinner-border spinner-border-sm d-none"
+        aria-hidden="true"
+      ></output>
+
+      Sign Up
+    </button> -->
+
+    <app-button
+      [variant]="'primary'"
+      [size]="'md'"
+      [rounded]="true"
+      [fullWidth]="true"
+      type="submit"
+      >Sign Up</app-button
+    >
+  </form>
+  <p class="primary-font-medium account-prompt">
+    Already have an account?
+    <!-- <button class="default-button" (click)="goToSignIn.emit()">Sign In</button> -->
+    <app-button
+      [variant]="'default'"
+      [fullWidth]="false"
+      (clicked)="goToSignIn.emit()"
+      >Sign In</app-button
+    >
+  </p>
+</div>

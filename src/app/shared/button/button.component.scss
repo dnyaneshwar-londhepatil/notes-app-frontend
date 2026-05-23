@@ -1,0 +1,74 @@
+.button {
+  background: transparent;
+  border: 0;
+  padding: 0;
+
+  &--primary {
+    background-color: var(--color-primary-btn-bg);
+    color: var(--color-primary-btn-text);
+    border: 1px solid var(--color-primary-btn-bg);
+  }
+
+  &--secondary {
+    background-color: var(--color-secondary-btn-bg);
+    color: var(--color-secondary-btn-text);
+    border: 1px solid var(--color-stroke-default);
+  }
+
+  &--tertiary {
+    background-color: var(--color-tertiary-btn-bg);
+    color: var(--color-tertiary-btn-text);
+    border: 1px solid var(--color-tertiary-btn-bg);
+  }
+
+  &--active {
+    background: #fac775;
+    border-color: #ef9f27;
+    color: #412402;
+  }
+
+  &--warning {
+    background-color: var(--color-error-default);
+    color: var(--color-light-text);
+    border: 1px solid var(--color-error-default);
+  }
+
+  &--sm {
+    padding: 6px 12px;
+    font-size: 14px;
+  }
+  &--md {
+    padding: 10px 20px;
+    font-size: 16px;
+  }
+  &--lg {
+    padding: 14px 28px;
+    font-size: 16px;
+  }
+
+  &--default {
+    padding: 0px 0px;
+    font-size: 16px;
+  }
+
+  &--rounded {
+    border-radius: 9999px;
+  }
+
+  &--full-width {
+    width: 100%;
+  }
+}
+
+.custom-button {
+  min-height: 53px;
+  width: auto;
+
+  @media screen and (max-width: 1199px) {
+    min-height: 48px;
+  }
+
+  @media screen and (max-width: 991px) {
+    min-height: 40px;
+  }
+}

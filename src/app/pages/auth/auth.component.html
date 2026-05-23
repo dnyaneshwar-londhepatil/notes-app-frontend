@@ -1,0 +1,16 @@
+<div class="auth-container">
+  <div class="auth-container-child">
+    @switch (selectedState()) {
+      @case (AuthState.SIGN_UP) {
+        <app-sign-up
+          (goToSignIn)="changeState(AuthState.SIGN_IN)"
+        ></app-sign-up>
+      }
+      @case (AuthState.SIGN_IN) {
+        <app-sign-in
+          (goToSignUp)="changeState(AuthState.SIGN_UP)"
+        ></app-sign-in>
+      }
+    }
+  </div>
+</div>
