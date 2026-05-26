@@ -7,7 +7,11 @@ import {
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { provideRouter } from '@angular/router';
-import { provideHttpClient, withInterceptors, withFetch } from '@angular/common/http';
+import {
+  provideHttpClient,
+  withInterceptors,
+  withFetch,
+} from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { routes } from './app.routes';
@@ -24,7 +28,7 @@ import { authInterceptor } from './interceptor/auth/auth.interceptor';
 
 function localStorageDriverFactory(): Driver {
   const platformId = inject(PLATFORM_ID);
-  
+
   // Only use real localStorage on the browser
   if (isPlatformBrowser(platformId)) {
     return globalThis.localStorage as unknown as Driver;

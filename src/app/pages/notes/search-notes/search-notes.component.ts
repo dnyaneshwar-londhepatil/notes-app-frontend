@@ -2,6 +2,7 @@ import { Component, inject, output } from '@angular/core';
 import { ButtonComponent } from '../../../shared/button/button.component';
 import { ModalService } from '../../../services/modal/modal.service';
 import { AddNotesComponent } from '../add-notes/add-notes.component';
+import { AuthService } from '../../../services/auth/auth.service';
 
 @Component({
   selector: 'app-search-notes',
@@ -11,6 +12,8 @@ import { AddNotesComponent } from '../add-notes/add-notes.component';
 })
 export class SearchNotesComponent {
   public modalService = inject(ModalService);
+
+  public authService = inject(AuthService);
 
   public emittedCategory = output<string>();
 
@@ -30,5 +33,6 @@ export class SearchNotesComponent {
 
   public logout() {
     // Implement logout logic here, such as clearing authentication tokens and redirecting to the login page
+    this.authService.logout();
   }
 }
