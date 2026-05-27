@@ -1,0 +1,6 @@
+<ng-content></ng-content>
+@if (showError()) {
+  <div class="invalid-feedback text-danger primary-font-regular">
+    {{ firstErrorMessage() }}
+  </div>
+}

@@ -51,7 +51,7 @@ export class AuthService {
   private handleError(error: HttpErrorResponse): Observable<never> {
     const message = error.error?.message || 'An unknown error occurred';
     this.error.set(message);
-    return throwError(() => new Error(message));
+    return throwError(() => error);
   }
 
   public logout(): void {

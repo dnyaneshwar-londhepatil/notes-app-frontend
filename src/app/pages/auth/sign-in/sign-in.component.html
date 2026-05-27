@@ -1,29 +1,41 @@
 <div class="auth-container sign-up-container">
   <div>
     <h1 class="primary-font-semibold heading">Sign In</h1>
-  </div>
 
-  @if (authService.error()) {
-    <p>{{ authService.error() }}</p>
-  }
+    @if (authService.error()) {
+      <app-error-messages
+        [control]="signInForm"
+        [forKeys]="['serverValidation']"
+        [errorKeyMapping]="fieldValidationRules().signInForm"
+      ></app-error-messages>
+    }
+  </div>
 
   <form
     class="form-container"
     (ngSubmit)="handleSignIn()"
     [formGroup]="signInForm"
+    [appMarkFormTouched]="signInForm"
     autocomplete="off"
   >
     <div class="form-group">
-      <label class="primary-font-medium form-label" for="email">Email</label>
-      <input
-        type="email"
-        id="email"
-        formControlName="email"
-        class="form-input form-control primary-font-medium"
-        appErrorStateHighlight
-        errStateClass="error-input"
-        placeholder="Enter your email"
-      />
+      <app-error-messages
+        [control]="signInForm.controls.email"
+        [errorKeyMapping]="fieldValidationRules().email"
+        class="error-messages"
+      >
+        <label class="primary-font-medium form-label" for="email">Email</label>
+        <input
+          type="email"
+          id="email"
+          formControlName="email"
+          class="form-input form-control primary-font-medium"
+          appErrorStateHighlight
+          [errorStateControl]="signInForm.controls.email"
+          errStateClass="error-input"
+          placeholder="Enter your email"
+        />
+      </app-error-messages>
     </div>
 
     <div class="form-group">
@@ -36,6 +48,7 @@
           formControlName="password"
           class="form-input form-control primary-font-medium"
           appErrorStateHighlight
+          [errorStateControl]="signInForm.controls.password"
           errorStateClass="error-input"
           placeholder="Enter your password"
         />

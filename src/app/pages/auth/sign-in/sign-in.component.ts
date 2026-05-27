@@ -1,4 +1,4 @@
-import { Component, output, inject, signal } from '@angular/core';
+import { Component, output, inject, signal, computed } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -13,11 +13,21 @@ import {
 } from '../../../services/storage/storage.service';
 import { SignInResponse } from '../../../interfaces/auth-response';
 import { ButtonComponent } from '../../../shared/button/button.component';
+import { ErrorMessagesComponent } from '../../../shared/error-messages/error-messages.component';
+import { HttpErrorResponse } from '@angular/common/http';
+import { ErrorStateHighlightDirective } from '../../../directives/error-state-highlight/error-state-highlight.directive';
+import { MarkFormTouchedDirective } from '../../../directives/mark-form-touched/mark-form-touched.directive';
 
 @Component({
   selector: 'app-sign-in',
   standalone: true,
-  imports: [ReactiveFormsModule, ButtonComponent],
+  imports: [
+    ReactiveFormsModule,
+    ButtonComponent,
+    ErrorMessagesComponent,
+    ErrorStateHighlightDirective,
+    MarkFormTouchedDirective,
+  ],
   templateUrl: './sign-in.component.html',
   styleUrl: './sign-in.component.scss',
 })
@@ -32,8 +42,41 @@ export class SignInComponent {
 
   public isLoading = signal(false);
 
+  public serverValidationErrors = signal({
+    email: '',
+    password: '',
+    signInForm: '',
+  });
+
+  fieldValidationRules = computed(() => {
+    const serverValidationErrors = this.serverValidationErrors();
+    return {
+      email: {
+        required: 'Email is required',
+        email: 'Please enter a valid email address',
+        pattern: 'Please enter a valid email address',
+        serverValidation: serverValidationErrors.email,
+      },
+      password: {
+        required: 'Password is required',
+        minLength: 'Password must be at least 6 characters long',
+        serverValidation: serverValidationErrors.password,
+      },
+      signInForm: {
+        serverValidation: serverValidationErrors.signInForm,
+      },
+    };
+  });
+
   signInForm = new FormGroup({
-    email: new FormControl('', [Validators.required, Validators.email]),
+    email: new FormControl('', {
+      nonNullable: true,
+      validators: [
+        Validators.required,
+        Validators.email,
+        Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/),
+      ],
+    }),
     password: new FormControl('', [
       Validators.required,
       Validators.minLength(6),
@@ -44,6 +87,7 @@ export class SignInComponent {
     this.isLoading.set(true);
 
     if (!this.signInForm.valid) {
+      this.isLoading.set(false);
       return;
     }
 
@@ -65,10 +109,28 @@ export class SignInComponent {
         },
         error: (error) => {
           this.isLoading.set(false);
-          console.error('Sign-in failed:', error);
+          console.log(
+            'Sign-in error type:',
+            error instanceof HttpErrorResponse,
+          );
+          if (error instanceof HttpErrorResponse) {
+            console.error('Sign-in error 1:', error);
+            this.mapErrors(error);
+          }
           // Handle sign-in error, e.g., show error message to user
         },
       });
     }
+  }
+
+  mapErrors(signInError: HttpErrorResponse) {
+    const errorMessage =
+      signInError.error?.message || 'An unknown error occurred';
+
+    this.signInForm.setErrors({
+      serverValidation: errorMessage,
+    });
+
+    this.signInForm.markAllAsTouched();
   }
 }
