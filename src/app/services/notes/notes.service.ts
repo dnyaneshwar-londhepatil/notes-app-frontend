@@ -22,9 +22,15 @@ export class NotesService {
 
   public notes = signal<Note[]>([]);
 
+  private hasLoaded = signal(false);
+
   constructor() {}
 
-  public getNotes(): void {
+  public getNotes(forceRefresh: boolean = false): void {
+    if (!forceRefresh && this.hasLoaded()) {
+      return;
+    }
+
     const token = this.storageService.getKey<string>(StorageKeys.AuthToken);
 
     if (!token) {
@@ -46,6 +52,7 @@ export class NotesService {
         tap((response) => {
           this.notes.set(response);
           this.error.set(null);
+          this.hasLoaded.set(true);
         }),
         catchError((err: HttpErrorResponse) => {
           this.error.set(err.error?.message ?? err.statusText);
@@ -66,6 +73,7 @@ export class NotesService {
       tap((newNote) => {
         this.notes.update((current) => [...current, newNote]);
         this.error.set(null);
+        this.hasLoaded.set(false); // Force refresh on next getNotes call to ensure data consistency
       }),
       catchError((err: HttpErrorResponse) => {
         this.error.set(err.error?.message ?? err.statusText);
@@ -84,6 +92,7 @@ export class NotesService {
           current.filter((note) => note._id !== noteId),
         );
         this.error.set(null);
+        this.hasLoaded.set(false); // Force refresh on next getNotes call to ensure data consistency
       }),
       catchError((err: HttpErrorResponse) => {
         this.error.set(err.error?.message ?? err.statusText);
