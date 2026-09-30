@@ -9,6 +9,7 @@ type ButtonClassNames =
   | 'default';
 
 type ButtonSize = 'sm' | 'md' | 'lg';
+type ButtonType = 'button' | 'submit' | 'reset';
 
 @Component({
   selector: 'app-button',
@@ -21,6 +22,7 @@ export class ButtonComponent {
   public variant = input<ButtonClassNames>('default');
   public size = input<ButtonSize>('md');
   public disabled = input<boolean>(false);
+  public type = input<ButtonType>('button');
   public rounded = input<boolean>(false);
   public fullWidth = input<boolean>(false);
   public clicked = output<void>();

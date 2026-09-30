@@ -1,6 +1,14 @@
 <div class="notes-page">
   <app-search-notes (emittedCategory)="filterNotes($event)"></app-search-notes>
 
+  @if (isLoading()) {
+    <p class="notes-status" role="status">Loading notes...</p>
+  } @else if (error()) {
+    <p class="notes-status notes-status--error" role="alert">{{ error() }}</p>
+  } @else if (getAllNotes().length === 0) {
+    <p class="notes-status">No notes yet.</p>
+  }
+
   <div class="notes-container">
     @for (note of getAllNotes(); track $index) {
       <app-notes-card [note]="note"></app-notes-card>

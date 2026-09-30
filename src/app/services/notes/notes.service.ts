@@ -2,7 +2,7 @@ import { inject, Injectable, signal, effect } from '@angular/core';
 import { Note, CreateNotePayload } from '../../interfaces/notes';
 import { ApiConfigService } from '../api-config/api-config.service';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+import { EMPTY, Observable, throwError } from 'rxjs';
 import { catchError, tap, finalize } from 'rxjs/operators';
 import { StorageKeys, StorageService } from '../storage/storage.service';
 
@@ -27,6 +27,10 @@ export class NotesService {
   constructor() {}
 
   public getNotes(forceRefresh: boolean = false): void {
+    if (this.isLoading()) {
+      return;
+    }
+
     if (!forceRefresh && this.hasLoaded()) {
       return;
     }
@@ -44,6 +48,7 @@ export class NotesService {
 
     const url = this.apiConfig.url('api/notes');
 
+    this.error.set(null);
     this.isLoading.set(true);
 
     this.http
@@ -55,9 +60,13 @@ export class NotesService {
           this.hasLoaded.set(true);
         }),
         catchError((err: HttpErrorResponse) => {
-          this.error.set(err.error?.message ?? err.statusText);
+          this.error.set(
+            err.error?.message ||
+              err.statusText ||
+              'Unable to load notes. Please try again.',
+          );
 
-          return throwError(() => err);
+          return EMPTY;
         }),
         finalize(() => {
           this.isLoading.set(false);

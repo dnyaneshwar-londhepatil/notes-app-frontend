@@ -1,7 +1,8 @@
-import { Component, inject, input } from '@angular/core';
+import { Component, inject, input, signal } from '@angular/core';
 import { ButtonComponent } from '../../../shared/button/button.component';
 import { ModalService } from '../../../services/modal/modal.service';
 import { NotesService } from '../../../services/notes/notes.service';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-delete-note',
@@ -14,19 +15,29 @@ export class DeleteNoteComponent {
   public notesService = inject(NotesService);
   public selectedNoteId = input<string>('');
 
+  public isDeleting = signal(false);
+
   public cancelDeleteAction(): void {
     this.modalService.closeModal();
   }
 
   public handleDeleteNote(): void {
+    if (this.isDeleting()) {
+      return;
+    }
+
     console.log('Note ID to delete:', this.selectedNoteId());
-    this.notesService.deleteNote(this.selectedNoteId()).subscribe({
-      next: () => {
-        this.modalService.closeModal();
-      },
-      error: (err) => {
-        console.error('Error deleting note:', err);
-      },
-    });
+    this.isDeleting.set(true);
+    this.notesService
+      .deleteNote(this.selectedNoteId())
+      .pipe(finalize(() => this.isDeleting.set(false)))
+      .subscribe({
+        next: () => {
+          this.modalService.closeModal();
+        },
+        error: (err) => {
+          console.error('Error deleting note:', err);
+        },
+      });
   }
 }

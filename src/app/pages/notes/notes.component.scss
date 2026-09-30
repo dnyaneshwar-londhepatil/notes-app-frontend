@@ -1,6 +1,15 @@
 .notes-page {
   padding-block: 3.25rem;
 
+  .notes-status {
+    margin: 0 0 1rem;
+    text-align: center;
+  }
+
+  .notes-status--error {
+    color: #b42318;
+  }
+
   .notes-container {
     display: grid;
     gap: 1.5rem;

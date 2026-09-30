@@ -1,4 +1,4 @@
-import { Component, input, inject } from '@angular/core';
+import { Component, input, inject, signal } from '@angular/core';
 import { TagComponent } from '../../../shared/tag/tag.component';
 import { ButtonComponent } from '../../../shared/button/button.component';
 import { Note } from '../../../interfaces/notes';
@@ -7,6 +7,7 @@ import { DeleteNoteComponent } from '../delete-note/delete-note.component';
 import { UpperCasePipe } from '@angular/common';
 import { AiService } from '../../../services/ai/ai.service';
 import { Router } from '@angular/router';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-notes-card',
@@ -22,6 +23,8 @@ export class NotesCardComponent {
   public aiService = inject(AiService);
 
   public router = inject(Router);
+
+  public isSummarizing = signal(false);
 
   public dateFormat(): string {
     const createdAt = new Date(this.note()?.createdAt as Date);
@@ -62,10 +65,19 @@ export class NotesCardComponent {
   }
 
   public handleSummarize(content: string) {
+    if (this.isSummarizing()) {
+      return;
+    }
+
     console.log('Summarize notes functionality triggered', content);
-    return this.aiService.summarizeNotes(content).subscribe((summary) => {
-      console.log('Note summarized:', summary);
-    });
+    this.isSummarizing.set(true);
+    return this.aiService
+      .summarizeNotes(content)
+      .pipe(finalize(() => this.isSummarizing.set(false)))
+      .subscribe({
+        next: (summary) => console.log('Note summarized:', summary),
+        error: (error) => console.error('Error summarizing note:', error),
+      });
   }
 
   public openNotePage() {

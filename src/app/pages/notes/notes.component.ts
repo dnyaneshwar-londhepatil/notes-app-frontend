@@ -1,13 +1,4 @@
-import { isPlatformBrowser } from '@angular/common';
-import {
-  Component,
-  inject,
-  PLATFORM_ID,
-  computed,
-  effect,
-} from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { defer, of } from 'rxjs';
+import { Component, computed, inject } from '@angular/core';
 
 import { SearchNotesComponent } from './search-notes/search-notes.component';
 import { NotesCardComponent } from './notes-card/notes-card.component';
@@ -23,7 +14,9 @@ import { Note } from '../../interfaces/notes';
 export class NotesComponent {
   private readonly notesService = inject(NotesService);
 
-  private readonly platformId = inject(PLATFORM_ID);
+  public readonly isLoading = this.notesService.isLoading;
+
+  public readonly error = this.notesService.error;
 
   public getAllNotes = computed(() => this.notesService.notes());
 

@@ -84,16 +84,18 @@ export class SignInComponent {
   });
 
   handleSignIn() {
-    this.isLoading.set(true);
+    if (this.isLoading()) {
+      return;
+    }
 
     if (!this.signInForm.valid) {
-      this.isLoading.set(false);
       return;
     }
 
     const { email, password } = this.signInForm.value;
 
     if (email && password) {
+      this.isLoading.set(true);
       this.authService.signIn({ email, password }).subscribe({
         next: (response: SignInResponse) => {
           this.isLoading.set(false);

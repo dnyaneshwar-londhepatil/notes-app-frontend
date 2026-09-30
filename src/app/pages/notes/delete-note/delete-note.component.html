@@ -7,7 +7,11 @@
     <app-button [variant]="'secondary'" (clicked)="cancelDeleteAction()"
       >Cancel</app-button
     >
-    <app-button [variant]="'warning'" (clicked)="handleDeleteNote()"
+    <app-button
+      [variant]="'warning'"
+      [isLoading]="isDeleting()"
+      [disabled]="isDeleting()"
+      (clicked)="handleDeleteNote()"
       >Delete</app-button
     >
   </div>

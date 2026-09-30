@@ -1,9 +1,10 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { ButtonComponent } from '../../../shared/button/button.component';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { NotesService } from '../../../services/notes/notes.service';
 import { CreateNotePayload } from '../../../interfaces/notes';
 import { ModalService } from '../../../services/modal/modal.service';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-add-notes',
@@ -15,6 +16,8 @@ export class AddNotesComponent {
   private readonly noteService = inject(NotesService);
   private readonly modalService = inject(ModalService);
 
+  public isSaving = signal(false);
+
   newNoteForm = new FormGroup({
     title: new FormControl(),
     note: new FormControl(),
@@ -22,17 +25,25 @@ export class AddNotesComponent {
   });
 
   handleNewNote() {
+    if (this.isSaving()) {
+      return;
+    }
+
     const payload = {
       title: this.newNoteForm.getRawValue().title,
       content: this.newNoteForm.getRawValue().note,
       category: this.newNoteForm.getRawValue().category,
     };
 
-    this.noteService.addNewNote(payload as CreateNotePayload).subscribe({
-      next: () => {
-        this.modalService.closeModal();
-      },
-    });
+    this.isSaving.set(true);
+    this.noteService
+      .addNewNote(payload as CreateNotePayload)
+      .pipe(finalize(() => this.isSaving.set(false)))
+      .subscribe({
+        next: () => {
+          this.modalService.closeModal();
+        },
+      });
   }
 
   handleCancel(): void {

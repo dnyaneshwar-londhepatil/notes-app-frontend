@@ -1,4 +1,10 @@
-<button class="btn button" [class]="classes" (click)="handleClick()">
+<button
+  class="btn button"
+  [class]="classes"
+  [type]="type()"
+  [disabled]="disabled() || isLoading()"
+  (click)="handleClick()"
+>
   @if (isLoading()) {
     <output
       class="spinner-border spinner-border-sm"

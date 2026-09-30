@@ -51,6 +51,8 @@
         </app-button>
         <app-button
           [size]="'sm'"
+          [isLoading]="isSummarizing()"
+          [disabled]="isSummarizing()"
           (clicked)="handleSummarize(note()?.content || '')"
         >
           <span class="action-buttons">

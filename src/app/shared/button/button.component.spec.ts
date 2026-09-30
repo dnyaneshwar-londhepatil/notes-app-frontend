@@ -20,4 +20,14 @@ describe('ButtonComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('forwards button type and disables while loading', () => {
+    fixture.componentRef.setInput('type', 'submit');
+    fixture.componentRef.setInput('isLoading', true);
+    fixture.detectChanges();
+
+    const button: HTMLButtonElement = fixture.nativeElement.querySelector('button');
+    expect(button.type).toBe('submit');
+    expect(button.disabled).toBeTrue();
+  });
 });

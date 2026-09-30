@@ -1,4 +1,4 @@
-import { Component, inject, output } from '@angular/core';
+import { Component, inject, output, signal } from '@angular/core';
 import {
   ReactiveFormsModule,
   FormGroup,
@@ -9,6 +9,7 @@ import {
 import { AuthService } from '../../../services/auth/auth.service';
 import { AuthState } from '../../../interfaces/auth-state';
 import { ButtonComponent } from '../../../shared/button/button.component';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-sign-up',
@@ -21,6 +22,8 @@ export class SignUpComponent {
   public authService = inject(AuthService);
 
   public AuthState = AuthState;
+
+  public isLoading = signal(false);
 
   signUpForm = new FormGroup({
     userName: new FormControl('', [Validators.required]),
@@ -39,12 +42,20 @@ export class SignUpComponent {
   public goToSignIn = output<void>();
 
   handleRegistration() {
+    if (this.isLoading()) {
+      return;
+    }
+
     const { userName, email, password } = this.signUpForm.value;
     if (!userName || !email || !password) {
       return;
     }
     if (this.signUpForm.valid) {
-      this.authService.signUp({ userName, email, password }).subscribe({
+      this.isLoading.set(true);
+      this.authService
+        .signUp({ userName, email, password })
+        .pipe(finalize(() => this.isLoading.set(false)))
+        .subscribe({
         next: (response) => {
           this.goToSignIn.emit();
         },
@@ -52,7 +63,7 @@ export class SignUpComponent {
           console.log('Sign up failed:', error);
           // Handle error - show error message
         },
-      });
+        });
     }
   }
 }

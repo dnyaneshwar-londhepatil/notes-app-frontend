@@ -47,6 +47,12 @@
     <app-button [variant]="'secondary'" (clicked)="handleCancel()"
       >Cancel</app-button
     >
-    <app-button [variant]="'primary'" type="submit">Save note</app-button>
+    <app-button
+      [variant]="'primary'"
+      type="submit"
+      [isLoading]="isSaving()"
+      [disabled]="isSaving()"
+      >Save note</app-button
+    >
   </div>
 </form>
