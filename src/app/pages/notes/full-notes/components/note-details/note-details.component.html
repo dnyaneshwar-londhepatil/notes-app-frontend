@@ -8,6 +8,11 @@
     </app-tag>
     <p class="primary-font-bold notes-title">{{ selectedNote()?.title }}</p>
   </div>
+
+  <div class="summary-container">
+    <app-summarized-notes />
+  </div>
+
   <div class="content-container">
     <p class="primary-font-regular notes-content">
       {{ selectedNote()?.content }}

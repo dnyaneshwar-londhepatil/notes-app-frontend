@@ -24,3 +24,32 @@
     }
   }
 }
+
+.detail-state {
+  display: flex;
+  min-height: 280px;
+  // height: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  color: var(--color-text-secondary);
+}
+
+.detail-state--error {
+  color: #b42318;
+}
+
+.loading-spinner {
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 3px solid #e7ddf8;
+  border-top-color: #6938ef;
+  border-radius: 50%;
+  animation: detail-spin 0.75s linear infinite;
+}
+
+@keyframes detail-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

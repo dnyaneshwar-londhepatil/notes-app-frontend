@@ -13,8 +13,21 @@
         [selectedNoteId]="selectedNoteId()"
       ></app-notes-list>
     </div>
-    <div class="right-container">
-      <app-note-details [selectedNote]="selectedNote()"></app-note-details>
+    <div class="right-container" aria-live="polite">
+      @if (notesService.isLoading()) {
+        <div class="detail-state" role="status">
+          <span class="loading-spinner" aria-hidden="true"></span>
+          <span>Loading note...</span>
+        </div>
+      } @else if (notesService.error()) {
+        <div class="detail-state detail-state--error" role="alert">
+          {{ notesService.error() }}
+        </div>
+      } @else if (selectedNote()) {
+        <app-note-details [selectedNote]="selectedNote()"></app-note-details>
+      } @else {
+        <div class="detail-state">Select a note to view its details.</div>
+      }
     </div>
   </div>
 </section>
