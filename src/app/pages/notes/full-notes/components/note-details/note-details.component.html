@@ -13,6 +13,7 @@
     <app-summarized-notes
       [noteId]="selectedNote()?._id ?? ''"
       [content]="selectedNote()?.content ?? ''"
+      [summary]="selectedNote()?.summarizedNotes ?? ''"
     />
   </div>
 

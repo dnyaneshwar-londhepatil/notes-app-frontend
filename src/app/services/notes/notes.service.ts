@@ -75,6 +75,14 @@ export class NotesService {
       .subscribe();
   }
 
+  public updateNoteSummary(noteId: string, summarizedNotes: string): void {
+    this.notes.update((current) =>
+      current.map((note) =>
+        note._id === noteId ? { ...note, summarizedNotes } : note,
+      ),
+    );
+  }
+
   public addNewNote(payload: CreateNotePayload): Observable<Note> {
     const url = this.apiConfig.url('api/notes');
 

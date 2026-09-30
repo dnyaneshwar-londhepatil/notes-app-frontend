@@ -1,33 +1,29 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
-import { signal } from '@angular/core';
 import { Subject } from 'rxjs';
 
 import { SummarizedNotesComponent } from './summarized-notes.component';
 import { AiService } from '../../../../../services/ai/ai.service';
+import { NotesService } from '../../../../../services/notes/notes.service';
 
 describe('SummarizedNotesComponent', () => {
   let component: SummarizedNotesComponent;
   let fixture: ComponentFixture<SummarizedNotesComponent>;
-  let summaries: ReturnType<typeof signal<Record<string, string>>>;
   let summarizeNotes: jasmine.Spy;
+  let updateNoteSummary: jasmine.Spy;
 
   beforeEach(async () => {
-    summaries = signal<Record<string, string>>({});
     summarizeNotes = jasmine.createSpy('summarizeNotes').and.returnValue(new Subject());
+    updateNoteSummary = jasmine.createSpy('updateNoteSummary');
     await TestBed.configureTestingModule({
       imports: [SummarizedNotesComponent],
       providers: [
         {
           provide: AiService,
           useValue: {
-            summaries,
-            summaryErrors: signal<Record<string, string>>({}),
             summarizeNotes,
-            setSummary: () => {},
-            setSummaryError: () => {},
-            clearSummaryError: () => {},
           },
         },
+        { provide: NotesService, useValue: { updateNoteSummary } },
       ],
     })
     .compileComponents();
@@ -49,14 +45,27 @@ describe('SummarizedNotesComponent', () => {
     expect(summarizeNotes).not.toHaveBeenCalled();
   });
 
-  it('types a summary received from the shared signal', fakeAsync(() => {
+  it('types a summary received from the persisted note field', fakeAsync(() => {
     fixture.componentRef.setInput('noteId', 'note-1');
+    fixture.componentRef.setInput('summary', 'Ready');
     fixture.detectChanges();
 
-    summaries.set({ 'note-1': 'Ready' });
-    fixture.detectChanges();
     tick(54);
 
     expect(component.typedSummary()).toBe('Ready');
   }));
+
+  it('persists a regenerated summary through NotesService', () => {
+    const response = new Subject<{ success: boolean; summary: string; note: object }>();
+    summarizeNotes.and.returnValue(response);
+    fixture.componentRef.setInput('noteId', 'note-1');
+    fixture.componentRef.setInput('content', 'Note content');
+    fixture.detectChanges();
+
+    component.regenerateSummary();
+    response.next({ success: true, summary: 'Updated', note: {} });
+
+    expect(summarizeNotes).toHaveBeenCalledWith('Note content', 'note-1');
+    expect(updateNoteSummary).toHaveBeenCalledWith('note-1', 'Updated');
+  });
 });

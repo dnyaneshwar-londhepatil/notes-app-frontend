@@ -5,16 +5,17 @@ import { Subject } from 'rxjs';
 import { NotesCardComponent } from './notes-card.component';
 import { AiService } from '../../../services/ai/ai.service';
 import { ModalService } from '../../../services/modal/modal.service';
+import { NotesService } from '../../../services/notes/notes.service';
 
 describe('NotesCardComponent', () => {
   let component: NotesCardComponent;
   let fixture: ComponentFixture<NotesCardComponent>;
   let summarizeNotes: jasmine.Spy;
-  let setSummary: jasmine.Spy;
+  let updateNoteSummary: jasmine.Spy;
 
   beforeEach(async () => {
     summarizeNotes = jasmine.createSpy('summarizeNotes').and.returnValue(new Subject());
-    setSummary = jasmine.createSpy('setSummary');
+    updateNoteSummary = jasmine.createSpy('updateNoteSummary');
     await TestBed.configureTestingModule({
       imports: [NotesCardComponent],
       providers: [
@@ -22,11 +23,9 @@ describe('NotesCardComponent', () => {
           provide: AiService,
           useValue: {
             summarizeNotes,
-            setSummary,
-            setSummaryError: () => {},
-            clearSummaryError: () => {},
           },
         },
+        { provide: NotesService, useValue: { updateNoteSummary } },
         { provide: ModalService, useValue: { open: () => {} } },
         { provide: Router, useValue: { navigate: () => Promise.resolve(true) } },
       ],
@@ -59,13 +58,21 @@ describe('NotesCardComponent', () => {
     expect(summarizeNotes).toHaveBeenCalledTimes(1);
   });
 
-  it('stores the API summary against the current note id', () => {
-    const response = new Subject<{ summary: string }>();
+  it('updates the note with the API summary', () => {
+    const response = new Subject<{ success: boolean; summary: string; note: object }>();
     summarizeNotes.and.returnValue(response);
 
     component.handleSummarize('note content');
-    response.next({ summary: 'Generated summary' });
+    response.next({
+      success: true,
+      summary: 'Generated summary',
+      note: {},
+    });
 
-    expect(setSummary).toHaveBeenCalledWith('note-1', 'Generated summary');
+    expect(summarizeNotes).toHaveBeenCalledWith('note content', 'note-1');
+    expect(updateNoteSummary).toHaveBeenCalledWith(
+      'note-1',
+      'Generated summary',
+    );
   });
 });

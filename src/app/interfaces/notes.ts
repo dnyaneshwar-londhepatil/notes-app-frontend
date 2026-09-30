@@ -3,6 +3,7 @@ export interface Note {
   category: string;
   title: string;
   content: string;
+  summarizedNotes?: string;
   isPinned: boolean;
   userId: string;
   createdAt: Date;

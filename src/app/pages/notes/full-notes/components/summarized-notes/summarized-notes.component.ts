@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import { Subscription, finalize } from 'rxjs';
 import { AiService } from '../../../../../services/ai/ai.service';
+import { NotesService } from '../../../../../services/notes/notes.service';
 import { ButtonComponent } from '../../../../../shared/button/button.component';
 
 @Component({
@@ -19,19 +20,20 @@ import { ButtonComponent } from '../../../../../shared/button/button.component';
 export class SummarizedNotesComponent implements OnDestroy {
   public noteId = input('');
   public content = input('');
+  public summary = input('');
   public typedSummary = signal('');
   public isGenerating = signal(false);
   public isTyping = signal(false);
   public error = signal<string | null>(null);
 
   private readonly aiService = inject(AiService);
+  private readonly notesService = inject(NotesService);
   private request?: Subscription;
   private typingTimer?: ReturnType<typeof setInterval>;
 
   private readonly summaryEffect = effect(() => {
-    const noteId = this.noteId();
-    const summary = this.aiService.summaries()[noteId] ?? '';
-    this.error.set(this.aiService.summaryErrors()[noteId] ?? null);
+    const summary = this.summary();
+    if (summary) this.error.set(null);
     this.typeText(summary);
   });
 
@@ -43,18 +45,18 @@ export class SummarizedNotesComponent implements OnDestroy {
     this.request?.unsubscribe();
     this.clearTyping();
     this.error.set(null);
-    this.aiService.clearSummaryError(noteId);
     this.isGenerating.set(true);
 
     this.request = this.aiService
-      .summarizeNotes(content)
+      .summarizeNotes(content, noteId)
       .pipe(finalize(() => this.isGenerating.set(false)))
       .subscribe({
-        next: ({ summary }) => this.aiService.setSummary(noteId, summary),
+        next: ({ summary }) =>
+          this.notesService.updateNoteSummary(noteId, summary),
         error: (error) => {
           const message =
             error?.error?.message ?? 'Unable to generate the summary.';
-          this.aiService.setSummaryError(noteId, message);
+          this.error.set(message);
         },
       });
   }

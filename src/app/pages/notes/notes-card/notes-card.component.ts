@@ -6,6 +6,7 @@ import { ModalService } from '../../../services/modal/modal.service';
 import { DeleteNoteComponent } from '../delete-note/delete-note.component';
 import { UpperCasePipe } from '@angular/common';
 import { AiService } from '../../../services/ai/ai.service';
+import { NotesService } from '../../../services/notes/notes.service';
 import { Router } from '@angular/router';
 import { finalize } from 'rxjs/operators';
 
@@ -21,6 +22,8 @@ export class NotesCardComponent {
   public modalService = inject(ModalService);
 
   public aiService = inject(AiService);
+
+  private readonly notesService = inject(NotesService);
 
   public router = inject(Router);
 
@@ -71,17 +74,14 @@ export class NotesCardComponent {
     }
 
     console.log('Summarize notes functionality triggered', content);
-    this.aiService.clearSummaryError(noteId);
     this.isSummarizing.set(true);
     return this.aiService
-      .summarizeNotes(content)
+      .summarizeNotes(content, noteId)
       .pipe(finalize(() => this.isSummarizing.set(false)))
       .subscribe({
-        next: ({ summary }) => this.aiService.setSummary(noteId, summary),
+        next: ({ summary }) =>
+          this.notesService.updateNoteSummary(noteId, summary),
         error: (error) => {
-          const message =
-            error?.error?.message ?? 'Unable to generate the summary.';
-          this.aiService.setSummaryError(noteId, message);
           console.error('Error summarizing note:', error);
         },
       });
