@@ -10,13 +10,23 @@ describe('NotesCardComponent', () => {
   let component: NotesCardComponent;
   let fixture: ComponentFixture<NotesCardComponent>;
   let summarizeNotes: jasmine.Spy;
+  let setSummary: jasmine.Spy;
 
   beforeEach(async () => {
     summarizeNotes = jasmine.createSpy('summarizeNotes').and.returnValue(new Subject());
+    setSummary = jasmine.createSpy('setSummary');
     await TestBed.configureTestingModule({
       imports: [NotesCardComponent],
       providers: [
-        { provide: AiService, useValue: { summarizeNotes } },
+        {
+          provide: AiService,
+          useValue: {
+            summarizeNotes,
+            setSummary,
+            setSummaryError: () => {},
+            clearSummaryError: () => {},
+          },
+        },
         { provide: ModalService, useValue: { open: () => {} } },
         { provide: Router, useValue: { navigate: () => Promise.resolve(true) } },
       ],
@@ -47,5 +57,15 @@ describe('NotesCardComponent', () => {
     component.handleSummarize('note content');
 
     expect(summarizeNotes).toHaveBeenCalledTimes(1);
+  });
+
+  it('stores the API summary against the current note id', () => {
+    const response = new Subject<{ summary: string }>();
+    summarizeNotes.and.returnValue(response);
+
+    component.handleSummarize('note content');
+    response.next({ summary: 'Generated summary' });
+
+    expect(setSummary).toHaveBeenCalledWith('note-1', 'Generated summary');
   });
 });

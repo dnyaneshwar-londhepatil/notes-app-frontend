@@ -65,18 +65,25 @@ export class NotesCardComponent {
   }
 
   public handleSummarize(content: string) {
-    if (this.isSummarizing()) {
+    const noteId = this.note()?._id;
+    if (this.isSummarizing() || !noteId || !content.trim()) {
       return;
     }
 
     console.log('Summarize notes functionality triggered', content);
+    this.aiService.clearSummaryError(noteId);
     this.isSummarizing.set(true);
     return this.aiService
       .summarizeNotes(content)
       .pipe(finalize(() => this.isSummarizing.set(false)))
       .subscribe({
-        next: (summary) => console.log('Note summarized:', summary),
-        error: (error) => console.error('Error summarizing note:', error),
+        next: ({ summary }) => this.aiService.setSummary(noteId, summary),
+        error: (error) => {
+          const message =
+            error?.error?.message ?? 'Unable to generate the summary.';
+          this.aiService.setSummaryError(noteId, message);
+          console.error('Error summarizing note:', error);
+        },
       });
   }
 

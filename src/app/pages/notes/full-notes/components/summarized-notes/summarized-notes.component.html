@@ -5,15 +5,34 @@
       AI Summary
     </h2>
 
-    <button class="summary-regenerate" type="button">
+    <!-- <button
+      class="summary-regenerate"
+      type="button"
+      [disabled]="isGenerating()"
+      (click)="regenerate()"
+    >
       <span aria-hidden="true">&#8635;</span>
-      Regenerate
-    </button>
+      {{ isGenerating() ? 'Generating...' : 'Regenerate' }}
+    </button> -->
+
+    <app-button
+      [variant]="'secondary'"
+      [size]="'sm'"
+      [rounded]="false"
+      (clicked)="regenerateSummary()">
+      {{ isGenerating() ? 'Generating...' : 'Regenerate' }}
+    </app-button>
   </header>
 
-  <ul class="summary-points">
-    <li>Completed the LLM and LangChain tutorial.</li>
-    <li>Covered key concepts like large language models, prompt engineering, chains, agents, memory, and integrations.</li>
-    <li>Gained a solid understanding of how to work with LLMs using LangChain.</li>
-  </ul>
+  @if (error()) {
+    <p role="alert">{{ error() }}</p>
+  } @else if (isGenerating() && !typedSummary()) {
+    <p role="status">Generating summary...</p>
+  } @else if (typedSummary()) {
+    <p class="summary-text" [class.summary-text--typing]="isTyping()">
+      {{ typedSummary() }}
+    </p>
+  } @else {
+    <p class="summary-empty">Generate a summary from the note card.</p>
+  }
 </section>

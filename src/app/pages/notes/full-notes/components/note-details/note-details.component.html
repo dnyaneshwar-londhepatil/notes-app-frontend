@@ -10,7 +10,10 @@
   </div>
 
   <div class="summary-container">
-    <app-summarized-notes />
+    <app-summarized-notes
+      [noteId]="selectedNote()?._id ?? ''"
+      [content]="selectedNote()?.content ?? ''"
+    />
   </div>
 
   <div class="content-container">
