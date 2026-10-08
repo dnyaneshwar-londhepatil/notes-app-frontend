@@ -17,6 +17,8 @@ export class SearchNotesComponent {
 
   public emittedCategory = output<string>();
 
+  public emittedSearch = output<string>();
+
   public activeCategory: string = 'all';
 
   public openNewNote() {
@@ -29,6 +31,11 @@ export class SearchNotesComponent {
     this.activeCategory = category;
     this.emittedCategory.emit(category);
     // Implement the logic to filter notes based on the selected category
+  }
+
+  public handleSearch(event: Event) {
+    const input = event.target as HTMLInputElement;
+    this.emittedSearch.emit(input.value);
   }
 
   public logout() {

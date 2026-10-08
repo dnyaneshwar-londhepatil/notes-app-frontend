@@ -1,7 +1,7 @@
 import { Component, input, inject, signal } from '@angular/core';
 import { TagComponent } from '../../../shared/tag/tag.component';
 import { ButtonComponent } from '../../../shared/button/button.component';
-import { Note } from '../../../interfaces/notes';
+import { Note, SearchResultNote } from '../../../interfaces/notes';
 import { ModalService } from '../../../services/modal/modal.service';
 import { DeleteNoteComponent } from '../delete-note/delete-note.component';
 import { UpperCasePipe } from '@angular/common';
@@ -17,7 +17,7 @@ import { finalize } from 'rxjs/operators';
   styleUrl: './notes-card.component.scss',
 })
 export class NotesCardComponent {
-  public note = input<Note>();
+  public note = input<Note | SearchResultNote>();
 
   public modalService = inject(ModalService);
 

@@ -1,5 +1,8 @@
 <div class="notes-page">
-  <app-search-notes (emittedCategory)="filterNotes($event)"></app-search-notes>
+  <app-search-notes
+    (emittedCategory)="filterNotes($event)"
+    (emittedSearch)="searchNotes($event)"
+  ></app-search-notes>
 
   @if (isLoading()) {
     <p class="notes-status" role="status">Loading notes...</p>

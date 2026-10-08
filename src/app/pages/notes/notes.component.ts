@@ -1,9 +1,11 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
+import { debounceTime, distinctUntilChanged, of, Subject, switchMap } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 import { SearchNotesComponent } from './search-notes/search-notes.component';
 import { NotesCardComponent } from './notes-card/notes-card.component';
 import { NotesService } from '../../services/notes/notes.service';
-import { Note } from '../../interfaces/notes';
+import { Note, SearchResultNote } from '../../interfaces/notes';
 
 @Component({
   selector: 'app-notes',
@@ -14,55 +16,47 @@ import { Note } from '../../interfaces/notes';
 export class NotesComponent {
   private readonly notesService = inject(NotesService);
 
+  private readonly searchQueries = new Subject<string>();
+
+  private readonly searchedNotes = signal<SearchResultNote[] | null>(null);
+
+  private readonly activeCategory = signal('all');
+
   public readonly isLoading = this.notesService.isLoading;
 
   public readonly error = this.notesService.error;
 
-  public getAllNotes = computed(() => this.notesService.notes());
+  public getAllNotes = computed(() => {
+    const notes = this.searchedNotes() ?? this.notesService.notes();
+    const category = this.activeCategory();
+    return category === 'all'
+      ? notes
+      : notes.filter((note) => note.category === category);
+  });
 
   constructor() {
     this.notesService.getNotes();
+
+    this.searchQueries
+      .pipe(
+        debounceTime(500),
+        distinctUntilChanged(),
+        switchMap((query) =>
+          query
+            ? this.notesService.searchNotes(query).pipe(
+                catchError(() => of([] as SearchResultNote[])),
+              )
+            : of(null),
+        ),
+      )
+      .subscribe((results) => this.searchedNotes.set(results));
   }
 
   public filterNotes(category: string) {
-    console.log(`Filtering notes in NotesComponent by category: ${category}`);
-    switch (category) {
-      case 'all': {
-        this.getAllNotes = computed(() => this.notesService.notes());
-        break;
-      }
-      case 'personal': {
-        this.getAllNotes = computed(() =>
-          this.notesService
-            .notes()
-            .filter((note) => note.category === 'personal'),
-        );
-        break;
-      }
-      case 'ideas': {
-        this.getAllNotes = computed(() =>
-          this.notesService.notes().filter((note) => note.category === 'ideas'),
-        );
-        break;
-      }
-      case 'work': {
-        this.getAllNotes = computed(() =>
-          this.notesService.notes().filter((note) => note.category === 'work'),
-        );
-        break;
-      }
-      case 'urgent': {
-        this.getAllNotes = computed(() =>
-          this.notesService
-            .notes()
-            .filter((note) => note.category === 'urgent'),
-        );
-        break;
-      }
-      default: {
-        this.getAllNotes = computed(() => this.notesService.notes());
-        break;
-      }
-    }
+    this.activeCategory.set(category);
+  }
+
+  public searchNotes(query: string) {
+    this.searchQueries.next(query.trim());
   }
 }
