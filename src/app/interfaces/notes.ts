@@ -10,6 +10,19 @@ export interface Note {
   updatedAt: Date;
 }
 
+export type SearchResultNote = Omit<
+  Pick<Note, '_id' | 'category' | 'title' | 'content' | 'isPinned' | 'createdAt'>,
+  'createdAt'
+> & {
+  createdAt: string;
+  score: number;
+};
+
+export interface SearchNotesResponse {
+  success: boolean;
+  results: SearchResultNote[];
+}
+
 export interface CreateNotePayload {
   title: string;
   content: string;

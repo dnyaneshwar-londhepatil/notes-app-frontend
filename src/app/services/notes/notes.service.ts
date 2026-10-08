@@ -1,9 +1,14 @@
 import { inject, Injectable, signal, effect } from '@angular/core';
-import { Note, CreateNotePayload } from '../../interfaces/notes';
+import {
+  Note,
+  CreateNotePayload,
+  SearchNotesResponse,
+  SearchResultNote,
+} from '../../interfaces/notes';
 import { ApiConfigService } from '../api-config/api-config.service';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { EMPTY, Observable, throwError } from 'rxjs';
-import { catchError, tap, finalize } from 'rxjs/operators';
+import { catchError, tap, finalize, map } from 'rxjs/operators';
 import { StorageKeys, StorageService } from '../storage/storage.service';
 
 @Injectable({
@@ -73,6 +78,36 @@ export class NotesService {
         }),
       )
       .subscribe();
+  }
+
+  public searchNotes(query: string): Observable<SearchResultNote[]> {
+    const token = this.storageService.getKey<string>(StorageKeys.AuthToken);
+
+    if (!token) {
+      this.error.set('Authentication token is missing. Please log in again.');
+      return throwError(() => new Error('Authentication token is missing.'));
+    }
+
+    const url = this.apiConfig.url('api/notes/search');
+
+    this.error.set(null);
+
+    return this.http
+      .post<SearchNotesResponse>(url, { query }, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .pipe(
+        map((response) => response.results),
+        tap(() => this.error.set(null)),
+        catchError((err: HttpErrorResponse) => {
+          this.error.set(
+            err.error?.message ||
+              err.statusText ||
+              'Unable to search notes. Please try again.',
+          );
+          return throwError(() => err);
+        }),
+      );
   }
 
   public updateNoteSummary(noteId: string, summarizedNotes: string): void {

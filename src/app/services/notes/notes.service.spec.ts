@@ -57,4 +57,31 @@ describe('NotesService', () => {
 
     expect(service.notes()).toEqual([note]);
   });
+
+  it('searches notes using the POST request body', () => {
+    const result = {
+      _id: 'note-2',
+      category: 'personal',
+      title: 'Search result',
+      content: 'Matching content',
+      isPinned: false,
+      createdAt: '2026-10-01T17:50:24.936Z',
+      score: 0.5955866575241089,
+    };
+    let response: typeof result[] | undefined;
+
+    service.searchNotes('matching words').subscribe((notes) => {
+      response = notes;
+    });
+
+    const request = httpTesting.expectOne((req) =>
+      req.url.endsWith('/api/notes/search'),
+    );
+    expect(request.request.method).toBe('POST');
+    expect(request.request.body).toEqual({ query: 'matching words' });
+    expect(request.request.headers.get('Authorization')).toBe('Bearer test-token');
+    request.flush({ success: true, results: [result] });
+
+    expect(response).toEqual([result]);
+  });
 });
